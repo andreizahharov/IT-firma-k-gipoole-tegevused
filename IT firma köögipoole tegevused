@@ -1,0 +1,34 @@
+import datetime
+# Funktsioon saab teada tänapäevase kuupäeva selleks, et kui on sisestatud vale kuupäev ilmuks ette veateade.
+def p_tänane_kuupäev():
+    return datetime.date.today()
+# funktsioontagastab kuupäeva ja kellaaega kujutava stringi, kasutades kuupäeva, aega või kuupäeva objekti.
+def p_kuupäev_str(kp):
+    # saab sisendiks kuupäeva ja tagastab selle sõnena formaadis (pp.kk.aaaa)
+    return kp.strftime("%d.%m.%Y")
+# funktsioon arvutab välja järgmise visiiti kuupäeva ja tagastab seda pp.kk.aaaa formaatis
+def p_arvuta_visiidi_kuupäev(i_külastuse_kuupäev):
+    täna = p_tänane_kuupäev()
+    # liidame pool aastat (182 päeva) viimasele külastusele
+    uus_visiidiaeg = i_külastuse_kuupäev + datetime.timedelta(182)
+    if uus_visiidiaeg <= täna:
+        uus_visiidiaeg = täna + datetime.timedelta(1)
+    return uus_visiidiaeg
+
+print("Hambaid tuleks lasta kontrollida vähemalt kaks korda aastas.")
+print("Millal viimati hambaarsti juures käisid?")
+
+try:
+    viimane_visiit = input("Sisesta kuupäev (kujul pp.kk.aaaa): ")
+    # logisse kirjutamine vaja teha
+    päev, i_kuu, aasta = map(int, viimane_visiit.split('.'))
+    külastuse_kuupäev = datetime.date(aasta, i_kuu, päev)
+    
+    if külastuse_kuupäev > p_tänane_kuupäev():
+        print("Tulevikus ei saanud visiidil käia.")
+    else:
+        print("Viimane külastus oli: " + p_kuupäev_str(külastuse_kuupäev))
+        uus_külastus = p_arvuta_visiidi_kuupäev(külastuse_kuupäev) 
+        print("Peaksid minema uuele visiidile umbes: " + p_kuupäev_str(uus_külastus))
+except Exception as verivorst:
+    print("Sisestasid kuupäeva vales formaadis!")
